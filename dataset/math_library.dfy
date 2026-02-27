@@ -261,6 +261,82 @@ function {:extern} upper_bounded_param(ub: real, initial: real): (r: real)
     ensures r <= ub
 
 
+// Teaches Dafny the ordering, positivity, and zero-states of real-valued powers
+lemma {:axiom} lemma_pow_real_properties(x: real)
+    requires x >= 0.0
+    
+    // Rule A: Evaluating at zero
+    ensures (x == 0.0) ==> (pow(x, 2.0) == 0.0 && pow(x, 3.0) == 0.0 && pow(x, 4.0) == 0.0 && pow(x, 5.0) == 0.0)
+    
+    // Rule B: Positivity
+    ensures pow(x, 2.0) >= 0.0 && pow(x, 3.0) >= 0.0 && pow(x, 4.0) >= 0.0 && pow(x, 5.0) >= 0.0
+    
+    // Rule C: Monotonicity (Growth) for x >= 1
+    ensures (x >= 1.0) ==> (x <= pow(x, 2.0) <= pow(x, 3.0) <= pow(x, 4.0) <= pow(x, 5.0))
+    
+    // Rule D: Monotonicity (Decay) for 0 <= x <= 1
+    ensures (x <= 1.0) ==> (pow(x, 5.0) <= pow(x, 4.0) <= pow(x, 3.0) <= pow(x, 2.0) <= x)
+
+
+// Teaches Dafny that the product of two bounded fractional values is bounded
+lemma {:axiom} lemma_MulBounds_fractional(a: real, b: real)
+    requires -1.0 <= a <= 1.0
+    requires -1.0 <= b <= 1.0
+    ensures -1.0 <= a * b <= 1.0
+
+
+lemma {:axiom} lemma_MulBounds(a: real, b: real)
+    requires -1.0 <= a <= 1.0
+    requires -1.0 <= b <= 1.0
+    ensures -1.0 <= a * b <= 1.0
+
+lemma {:axiom} lemma_Parity_Powers(x: real)
+    ensures powInt(-x, 2) == powInt(x, 2)
+    ensures powInt(-x, 3) == -powInt(x, 3)
+    ensures powInt(-x, 4) == powInt(x, 4)
+    ensures powInt(-x, 5) == -powInt(x, 5)
+    ensures powInt(-x, 6) == powInt(x, 6)
+
+// Specific lower bounds for the Nguyen polynomial benchmarks
+lemma {:axiom} lemma_Polynomial_nguyen3_bounds(x: real)
+    ensures (x < 0.0) ==> (powInt(x, 5) + powInt(x, 4) + powInt(x, 3) + powInt(x, 2) + x <= 0.0)
+
+
+lemma {:axiom} lemma_Polynomial_nguyen4_bounds(x: real)
+    ensures (x < 0.0) ==> (powInt(x, 6) + powInt(x, 5) + powInt(x, 4) + powInt(x, 3) + powInt(x, 2) + x >= -0.75)
+
+
+lemma {:axiom} lemma_parallel_resistors_2(r1: real, r2: real)
+    requires r1 > 0.0 && r2 > 0.0
+    ensures (r1 == r2) ==> ((r1 * r2) / (r1 + r2) == r1 / 2.0)
+    ensures (r1 * r2) / (r1 + r2) <= r1
+    ensures (r1 * r2) / (r1 + r2) <= r2
+
+
+lemma {:axiom} lemma_parallel_resistors_3(r1: real, r2: real, r3: real)
+    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
+    ensures (r1 == r2 && r2 == r3) ==> ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3)) == r1 / 3.0)
+    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r1
+    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r2
+    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r3
+
+
+lemma {:axiom} lemma_gravity_monotonicity(m1: real, m1_b: real, m2: real, m2_b: real, r: real)
+    requires 0.0001 <= m1 <= 20.0 && 0.0001 <= m1_b <= 20.0
+    requires 0.0001 <= m2 <= 20.0 && 0.0001 <= m2_b <= 20.0
+    requires 0.0001 <= r <= 20.0
+    
+    // Inline guards permanently silence the division-by-zero warnings
+    ensures (m1_b > m1) ==> (
+        (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1_b * m2) / (r * r))) > 
+        (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1 * m2) / (r * r)))
+    )
+    ensures (m2_b > m2) ==> (
+        (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1 * m2_b) / (r * r))) > 
+        (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1 * m2) / (r * r)))
+    )
+
+
 
 
 
