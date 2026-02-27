@@ -239,6 +239,94 @@ lemma {:axiom} lemma_div_pos(a: real, b: real)
     requires b > 0.0
     ensures a / b >= 0.0
 
+//now the new lemmas
+// Axiom for strict division positivity (positive / positive > 0)
+lemma {:axiom} lemma_strict_div_pos(a: real, b: real)
+    requires a > 0.0
+    requires b > 0.0
+    ensures a / b > 0.0
+    
+// Axiom to prove the square of a non-zero number is strictly positive
+lemma {:axiom} lemma_square_strictly_pos(x: real)
+    requires x != 0.0
+    ensures x * x > 0.0
+    
+// Axiom for negative * positive = negative
+lemma {:axiom} lemma_mult_neg_pos_is_neg(a: real, b: real)
+    requires a < 0.0
+    requires b > 0.0
+    ensures a * b < 0.0
+    
+// Axiom for positive / negative = negative
+lemma {:axiom} lemma_div_pos_neg_is_neg(a: real, b: real)
+    requires a > 0.0
+    requires b < 0.0
+    ensures a / b < 0.0
+
+// ---- Axioms for Polynomial Algebra & Curves ----
+
+// Axioms for even/odd powers and negative numbers
+lemma {:axiom} lemma_even_pow4(x: real)
+    ensures (-x) * (-x) * (-x) * (-x) == x * x * x * x
+
+lemma {:axiom} lemma_odd_pow3(x: real)
+    ensures (-x) * (-x) * (-x) == -(x * x * x)
+
+lemma {:axiom} lemma_square_even(y: real)
+    ensures (-y) * (-y) == y * y
+
+// Axiom for Constraint 4: x^4 - x^3 is monotonically decreasing for x <= 0
+lemma {:axiom} lemma_poly_mono_x(x1: real, x2: real)
+    requires x1 < x2 <= 0.0
+    ensures (x1*x1*x1*x1 - x1*x1*x1) > (x2*x2*x2*x2 - x2*x2*x2)
+
+// Axiom for Constraint 5: y^2/2 - y is monotonically increasing for y >= 1
+lemma {:axiom} lemma_poly_mono_y_inc(y1: real, y2: real)
+    requires 1.0 <= y1 < y2
+    ensures (y1*y1)/2.0 - y1 < (y2*y2)/2.0 - y2
+
+// Axiom for Constraint 6: y^2/2 - y is monotonically decreasing for y <= 1
+lemma {:axiom} lemma_poly_mono_y_dec(y1: real, y2: real)
+    requires y1 < y2 <= 1.0
+    ensures (y1*y1)/2.0 - y1 > (y2*y2)/2.0 - y2
+
+// Axiom to ensure squares are always non-negative
+lemma {:axiom} lemma_square_non_negative(x: real)
+    ensures x * x >= 0.0
+
+// Axiom to prove an upper bound for division
+lemma {:axiom} lemma_div_upper_bound(a: real, b: real, c: real)
+    requires b > 0.0
+    requires a <= b * c
+    ensures a / b <= c
+
+// Axioms to prove cubed numbers preserve their signs
+lemma {:axiom} lemma_cube_neg(x: real)
+    requires x <= 0.0
+    ensures x * x * x <= 0.0
+
+lemma {:axiom} lemma_cube_pos(x: real)
+    requires x >= 0.0
+    ensures x * x * x >= 0.0
+
+// Axioms for multiplication with non-strict inequalities
+lemma {:axiom} lemma_mult_le_zero(a: real, b: real)
+    requires a <= 0.0
+    requires b <= 0.0
+    ensures a * b >= 0.0
+
+lemma {:axiom} lemma_mult_le_ge_zero(a: real, b: real)
+    requires a <= 0.0
+    requires b >= 0.0
+    ensures a * b <= 0.0
+
+// Axiom to teach Dafny how to factor this specific cubic polynomial
+lemma {:axiom} lemma_factor_cubic(x: real)
+    ensures (x * x * x) + (x * x) + x == x * ((x * x) + x + 1.0)
+
+// Axiom to prove the quadratic component is always strictly positive
+lemma {:axiom} lemma_quad_always_pos(x: real)
+    ensures (x * x) + x + 1.0 > 0.0
 
 
 function {:extern} bounded_param(lb: real, ub: real, initial: real): (r: real)
