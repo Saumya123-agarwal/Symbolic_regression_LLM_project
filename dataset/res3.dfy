@@ -1,45 +1,76 @@
-/// ==========================================
-// PROBLEM 5: res3
-// Target: (r1*r2*r3)/(r1*r2 + r1*r3 + r2*r3)
-// ==========================================
+include "math_library.dfy"
 
-// 1. THE HELPER LEMMA
-// Teach Dafny the bounds of this 3-variable rational function
-lemma {:axiom} FractionRules_res3(r1: real, r2: real, r3: real)
+// 1. The equation
+function res3(r1: real, r2: real, r3: real): real
     requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
-    // Rule A: Positivity
-    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) > 0.0
-    // Rule B: Upper Bounds 
-    // The equivalent resistance of parallel resistors is always less than 
-    // the smallest individual resistor.
-    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r1
-    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r2
-    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r3
-
-// 2. THE FUNCTION
-ghost function f_res3(r1: real, r2: real, r3: real): real 
-    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
+    requires ((r1 * r2) + (r1 * r3) + (r2 * r3)) != 0.0
 {
     (r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))
 }
 
-// 3. THE VERIFICATION
-lemma Verify_res3(r1: real, r2: real, r3: real)
+// Helper Lemma: Prove the denominator is always strictly positive
+lemma prove_denominator_valid(r1: real, r2: real, r3: real)
     requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
-    // Symmetry across all permutations
-    ensures f_res3(r1, r2, r3) == f_res3(r2, r1, r3)
-    ensures f_res3(r1, r2, r3) == f_res3(r3, r2, r1)
-    ensures f_res3(r1, r2, r3) == f_res3(r1, r3, r2)
-    // Bounded by individual resistors
-    ensures f_res3(r1, r2, r3) <= r1
-    ensures f_res3(r1, r2, r3) <= r2
-    ensures f_res3(r1, r2, r3) <= r3
-    // Positivity
-    ensures f_res3(r1, r2, r3) > 0.0
+    ensures ((r1 * r2) + (r1 * r3) + (r2 * r3)) > 0.0
 {
-    // Inject the fractional boundary rules into the proof
-    FractionRules_res3(r1, r2, r3);
+    lemma_strict_mult_pos(r1, r2);
+    lemma_strict_mult_pos(r1, r3);
+    lemma_strict_mult_pos(r2, r3);
+}
+
+// 2. Constraint 1: Symmetry across permutations
+lemma prove_constraint_1(r1: real, r2: real, r3: real)
+    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
+    requires ((r1 * r2) + (r1 * r3) + (r2 * r3)) != 0.0
+    ensures res3(r1, r2, r3) == res3(r2, r1, r3)
+    ensures res3(r1, r2, r3) == res3(r3, r2, r1)
+    ensures res3(r1, r2, r3) == res3(r1, r3, r2)
+{
+    // Dafny natively handles the commutative properties
+}
+
+// 3. Constraint 2: f <= r1 AND f <= r2 AND f <= r3
+lemma prove_constraint_2(r1: real, r2: real, r3: real)
+    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
+    requires ((r1 * r2) + (r1 * r3) + (r2 * r3)) != 0.0
+    ensures res3(r1, r2, r3) <= r1
+    ensures res3(r1, r2, r3) <= r2
+    ensures res3(r1, r2, r3) <= r3
+{
+    prove_denominator_valid(r1, r2, r3);
+    var den := (r1 * r2) + (r1 * r3) + (r2 * r3);
     
-    // Dafny handles the symmetry checks perfectly on its own.
-    // The axiom clears the hurdles for positivity and upper bounds.
+    // Part A: Prove f <= r1
+    lemma_strict_mult_pos(r2, r3); 
+    assert den >= (r2 * r3); 
+    lemma_res3_bound_r1(r1, r2, r3, den); 
+    
+    // Part B: Prove f <= r2
+    lemma_strict_mult_pos(r1, r3);
+    assert den >= (r1 * r3);
+    lemma_res3_bound_r2(r1, r2, r3, den);
+    
+    // Part C: Prove f <= r3
+    lemma_strict_mult_pos(r1, r2);
+    assert den >= (r1 * r2);
+    lemma_res3_bound_r3(r1, r2, r3, den);
+}
+
+// 4. Constraint 3: f > 0 (Strict Positivity)
+lemma prove_constraint_3(r1: real, r2: real, r3: real)
+    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
+    requires ((r1 * r2) + (r1 * r3) + (r2 * r3)) != 0.0
+    ensures res3(r1, r2, r3) > 0.0
+{
+    prove_denominator_valid(r1, r2, r3);
+    var den := (r1 * r2) + (r1 * r3) + (r2 * r3);
+    
+    // Prove the numerator is strictly positive
+    lemma_strict_mult_pos(r2, r3);
+    lemma_strict_mult_pos(r1, r2 * r3); 
+    assert (r1 * r2 * r3) == r1 * (r2 * r3);
+    assert (r1 * r2 * r3) > 0.0;
+    
+    // Prove strictly positive / strictly positive > 0
+    lemma_strict_div_pos((r1 * r2 * r3), den);
 }
