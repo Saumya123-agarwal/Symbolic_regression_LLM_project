@@ -461,14 +461,6 @@ lemma {:axiom} lemma_Parity_Powers(x: real)
     ensures powInt(-x, 5) == -powInt(x, 5)
     ensures powInt(-x, 6) == powInt(x, 6)
 
-// Specific lower bounds for the Nguyen polynomial benchmarks
-lemma {:axiom} lemma_Polynomial_nguyen3_bounds(x: real)
-    ensures (x < 0.0) ==> (powInt(x, 5) + powInt(x, 4) + powInt(x, 3) + powInt(x, 2) + x <= 0.0)
-
-
-lemma {:axiom} lemma_Polynomial_nguyen4_bounds(x: real)
-    ensures (x < 0.0) ==> (powInt(x, 6) + powInt(x, 5) + powInt(x, 4) + powInt(x, 3) + powInt(x, 2) + x >= -0.75)
-
 
 lemma {:axiom} lemma_kepler_rules(m1: real, m2: real, d: real, d_b: real, G: real)
     requires m1 > 0.0 && m2 > 0.0 && d > 0.0 && G > 0.0 && d_b > 0.0
