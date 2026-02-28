@@ -1,49 +1,71 @@
-include "prob_1_llm.dfy"
+include "math_library.dfy"
 
+// line no. 1980-2018 in dataset
 
-// ==========================================
-// PROBLEM 2: nguyen4
-// Target: x^6 + x^5 + x^4 + x^3 + x^2 + x
-// ==========================================
-
-// 1. THE HELPER LEMMA
-// We teach Dafny the algebraic rules it cannot derive on its own.
-lemma {:axiom} PolynomialRules_nguyen4(x: real)
-    // Rule A: Parity (Even and Odd functions)
-    // This allows Dafny to correctly cancel terms when evaluating f(x) >= f(-x)
-    ensures powInt(-x, 2) == powInt(x, 2)
-    ensures powInt(-x, 3) == -powInt(x, 3)
-    ensures powInt(-x, 4) == powInt(x, 4)
-    ensures powInt(-x, 5) == -powInt(x, 5)
-    ensures powInt(-x, 6) == powInt(x, 6)
-
-    // Rule B: Positivity of powers
-    // Teaches Dafny that positive inputs yield positive powers
-    ensures (x > 0.0) ==> (powInt(x, 2) > 0.0 && powInt(x, 3) > 0.0 && powInt(x, 4) > 0.0 && powInt(x, 5) > 0.0 && powInt(x, 6) > 0.0)
-
-    // Rule C: The Mathematical Lower Bound
-    // Teaches Dafny the global algebraic minimum of this specific polynomial for x < 0
-    ensures (x < 0.0) ==> (powInt(x, 6) + powInt(x, 5) + powInt(x, 4) + powInt(x, 3) + powInt(x, 2) + x >= -0.75)
-
-
-// 2. THE FUNCTION
-ghost function f_nguyen4(x: real): real {
-    powInt(x, 6) + powInt(x, 5) + powInt(x, 4) + powInt(x, 3) + powInt(x, 2) + x
-}
-
-
-// 3. THE VERIFICATION
-lemma Verify_nguyen4(x: real)
-    ensures (x > 0.0) ==> (f_nguyen4(x) >= 0.0)
-    ensures (x < 0.0) ==> (f_nguyen4(x) >= -0.75)
-    ensures (x > 0.0) ==> (f_nguyen4(x) >= f_nguyen4(-x))
+method agent(x: real) returns (r: real)
+    requires 0.0 <= x <= 5.0
+    ensures r >= 0.0
+    ensures (x >= 1.0) ==> (r <= 6.0 * pow(x, 6.0))
+    ensures (x <= 1.0) ==> (r >= 6.0 * pow(x, 6.0))
+    ensures (x <= 1.0) ==> (r <= 6.0 * x)
+    ensures (x >= 1.0) ==> (r >= 6.0 * x)
 {
-    // Inject the algebraic facts into Dafny's context
-    PolynomialRules_nguyen4(x);
-    
-    // Dafny now knows:
-    // 1. If x > 0, the sum of positive terms is >= 0 (Rule B).
-    // 2. If x < 0, the polynomial is bounded by -0.75 (Rule C).
-    // 3. f(x) - f(-x) = 2*x^5 + 2*x^3 + 2*x. Since x > 0, this is >= 0 (Rule A).
-    // Verification succeeds!
+    var p1 := pow(x, 1.0);
+    var p2 := pow(x, 2.0);
+    var p3 := pow(x, 3.0);
+    var p4 := pow(x, 4.0);
+    var p5 := pow(x, 5.0);
+    var p6 := pow(x, 6.0);
+
+    r := p6 + p5 + p4 + p3 + p2 + p1;
+
+    lemma_pow_mult(x, x);
+
+    if (x >= 1.0) {
+        // Case: x >= 1.0
+        // We use lemma_pow_comparator to prove that lower powers are smaller than higher powers.
+        // For x >= 1.0 and d1 <= d2, pow(x, d1) <= pow(x, d2).
+
+        // 1. Prove r <= 6 * x^6
+        // We show that p1...p5 are all <= p6 (x^6)
+        lemma_pow_comparator(x, 1.0, 6.0); // x^1 <= x^6
+        lemma_pow_comparator(x, 2.0, 6.0); // x^2 <= x^6
+        lemma_pow_comparator(x, 3.0, 6.0);
+        lemma_pow_comparator(x, 4.0, 6.0);
+        lemma_pow_comparator(x, 5.0, 6.0);
+        // Therefore, sum(p_i) <= 6 * p6
+
+        // 2. Prove r >= 6 * x
+        // We show that p2...p6 are all >= p1 (x)
+        lemma_pow_comparator(x, 1.0, 2.0); // x^1 <= x^2
+        lemma_pow_comparator(x, 1.0, 3.0);
+        lemma_pow_comparator(x, 1.0, 4.0);
+        lemma_pow_comparator(x, 1.0, 5.0);
+        lemma_pow_comparator(x, 1.0, 6.0);
+        // Therefore, sum(p_i) >= 6 * p1
+    }
+
+    if (x <= 1.0) {
+        // Case: 0.0 <= x <= 1.0
+        // We use lemma_pow_comparator to prove that lower powers are larger than higher powers.
+        // For 0 <= x <= 1.0 and d1 <= d2, pow(x, d1) >= pow(x, d2).
+
+        // 1. Prove r >= 6 * x^6
+        // We show that p1...p5 are all >= p6 (x^6)
+        lemma_pow_comparator(x, 1.0, 6.0); // x^1 >= x^6
+        lemma_pow_comparator(x, 2.0, 6.0); // x^2 >= x^6
+        lemma_pow_comparator(x, 3.0, 6.0);
+        lemma_pow_comparator(x, 4.0, 6.0);
+        lemma_pow_comparator(x, 5.0, 6.0);
+        // Therefore, sum(p_i) >= 6 * p6
+
+        // 2. Prove r <= 6 * x
+        // We show that p2...p6 are all <= p1 (x)
+        lemma_pow_comparator(x, 1.0, 2.0); // x^1 >= x^2
+        lemma_pow_comparator(x, 1.0, 3.0);
+        lemma_pow_comparator(x, 1.0, 4.0);
+        lemma_pow_comparator(x, 1.0, 5.0);
+        lemma_pow_comparator(x, 1.0, 6.0);
+        // Therefore, sum(p_i) <= 6 * p1
+    }
 }
