@@ -328,6 +328,82 @@ lemma {:axiom} lemma_factor_cubic(x: real)
 lemma {:axiom} lemma_quad_always_pos(x: real)
     ensures (x * x) + x + 1.0 > 0.0
 
+//new lemmas to be added 28th feb
+// Axiom to teach Dafny how to factor the nguyen3 quintic polynomial
+lemma {:axiom} lemma_factor_quintic(x: real)
+    ensures (x*x*x*x*x) + (x*x*x*x) + (x*x*x) + (x*x) + x == x * ((x*x*x*x) + (x*x*x) + (x*x) + x + 1.0)
+
+// Axiom to prove the 4th-degree component is always strictly positive
+lemma {:axiom} lemma_poly4_always_pos(x: real)
+    ensures (x*x*x*x) + (x*x*x) + (x*x) + x + 1.0 > 0.0
+
+// Axioms for 5th power signs
+lemma {:axiom} lemma_odd_pow5(x: real)
+    ensures (-x) * (-x) * (-x) * (-x) * (-x) == -(x * x * x * x * x)
+
+lemma {:axiom} lemma_pow5_pos(x: real)
+    requires x > 0.0
+    ensures (x * x * x * x * x) > 0.0
+
+// Axioms for nguyen4 polynomial bounds and factorization
+lemma {:axiom} lemma_factor_nguyen4(x: real)
+    ensures (x*x*x*x*x*x) + (x*x*x*x*x) + (x*x*x*x) + (x*x*x) + (x*x) + x == x * ((x*x*x*x*x) + (x*x*x*x) + (x*x*x) + (x*x) + x + 1.0)
+
+lemma {:axiom} lemma_poly5_always_pos_for_pos_x(x: real)
+    requires x > 0.0
+    ensures (x*x*x*x*x) + (x*x*x*x) + (x*x*x) + (x*x) + x + 1.0 > 0.0
+
+// Axiom to teach Dafny the absolute global minimum of this specific 6th-degree polynomial
+lemma {:axiom} lemma_nguyen4_lower_bound(x: real)
+    ensures (x*x*x*x*x*x) + (x*x*x*x*x) + (x*x*x*x) + (x*x*x) + (x*x) + x >= -0.75
+
+// Axiom for 6th power sign
+lemma {:axiom} lemma_even_pow6(x: real)
+    ensures (-x)*(-x)*(-x)*(-x)*(-x)*(-x) == (x*x*x*x*x*x)
+
+// Axioms for the pagie1 rational function bounds
+lemma {:axiom} lemma_pow4_strictly_pos(x: real)
+    requires x != 0.0
+    ensures (x * x * x * x) > 0.0
+
+lemma {:axiom} lemma_inverse_strictly_pos(x: real)
+    requires x > 0.0
+    ensures 1.0 / x > 0.0
+
+// Axiom defining the bounds of the specific fraction: 0 < 1 / (1 + positive) < 1
+lemma {:axiom} lemma_pagie_fraction_bounds(x_inv: real)
+    requires x_inv > 0.0
+    ensures 1.0 / (1.0 + x_inv) > 0.0
+    ensures 1.0 / (1.0 + x_inv) < 1.0
+
+// Axiom to prove fraction upper bounds when the denominator is larger than a numerator factor
+// Mathematically: if den >= b, then (a * b) / den <= a
+lemma {:axiom} lemma_fraction_upper_bound(a: real, b: real, den: real)
+    requires a > 0.0
+    requires b > 0.0
+    requires den >= b
+    requires den > 0.0
+    ensures (a * b) / den <= a
+
+// Axioms to bypass Dafny's NLA associativity blocks for 3-variable fractions
+lemma {:axiom} lemma_res3_bound_r1(r1: real, r2: real, r3: real, den: real)
+    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
+    requires den >= r2 * r3
+    requires den > 0.0
+    ensures (r1 * r2 * r3) / den <= r1
+
+lemma {:axiom} lemma_res3_bound_r2(r1: real, r2: real, r3: real, den: real)
+    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
+    requires den >= r1 * r3
+    requires den > 0.0
+    ensures (r1 * r2 * r3) / den <= r2
+
+lemma {:axiom} lemma_res3_bound_r3(r1: real, r2: real, r3: real, den: real)
+    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
+    requires den >= r1 * r2
+    requires den > 0.0
+    ensures (r1 * r2 * r3) / den <= r3
+
 
 function {:extern} bounded_param(lb: real, ub: real, initial: real): (r: real)
     requires lb <= ub
