@@ -394,7 +394,7 @@ lemma {:axiom} lemma_Polynomial_nguyen4_bounds(x: real)
     ensures (x < 0.0) ==> (powInt(x, 6) + powInt(x, 5) + powInt(x, 4) + powInt(x, 3) + powInt(x, 2) + x >= -0.75)
 
 
-lemma {:axiom} lemma_parallel_resistors_2(r1: real, r2: real)
+lemma {:axiom} Res2Rules(r1: real, r2: real)
     requires r1 > 0.0 && r2 > 0.0
     ensures (r1 == r2) ==> ((r1 * r2) / (r1 + r2) == r1 / 2.0)
     ensures (r1 * r2) / (r1 + r2) <= r1
