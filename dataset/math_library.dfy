@@ -424,6 +424,54 @@ lemma {:axiom} lemma_gravity_monotonicity(m1: real, m1_b: real, m2: real, m2_b: 
         (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1 * m2) / (r * r)))
     )
 
+lemma {:axiom} lemma_kepler_rules(m1: real, m2: real, d: real, d_b: real, G: real)
+    requires m1 > 0.0 && m2 > 0.0 && d > 0.0 && G > 0.0 && d_b > 0.0
+    // Constraint A: Positivity
+    ensures (if (G * (m1 + m2) == 0.0) || ((4.0 * 3.14159 * 3.14159 * d * d * d) / (G * (m1 + m2)) < 0.0) then 0.0 else sqrt((4.0 * 3.14159 * 3.14159 * d * d * d) / (G * (m1 + m2)))) > 0.0
+    // Constraint C: Monotonicity (Larger distance = longer period)
+    ensures (d_b > d) ==> (
+        (if (G * (m1 + m2) == 0.0) || ((4.0 * 3.14159 * 3.14159 * d_b * d_b * d_b) / (G * (m1 + m2)) < 0.0) then 0.0 else sqrt((4.0 * 3.14159 * 3.14159 * d_b * d_b * d_b) / (G * (m1 + m2)))) >
+        (if (G * (m1 + m2) == 0.0) || ((4.0 * 3.14159 * 3.14159 * d * d * d) / (G * (m1 + m2)) < 0.0) then 0.0 else sqrt((4.0 * 3.14159 * 3.14159 * d * d * d) / (G * (m1 + m2))))
+    )
+
+
+lemma {:axiom} lemma_einstein_rules(v: real, v_b: real, c: real)
+    requires 0.0 <= v < c && 0.0 <= v_b < c && c > 0.0
+    // Constraint A: Zero State
+    ensures (v == 0.0) ==> ((if (c * c == 0.0) || (1.0 - ((v * v) / (c * c)) < 0.0) then 0.0 else sqrt(1.0 - ((v * v) / (c * c))) - 1.0) == 0.0)
+    // Constraint B: Bounds
+    ensures -1.0 <= (if (c * c == 0.0) || (1.0 - ((v * v) / (c * c)) < 0.0) then 0.0 else sqrt(1.0 - ((v * v) / (c * c))) - 1.0) <= 0.0
+    // Constraint C: Monotonic Decreasing
+    ensures (v_b > v) ==> (
+        (if (c * c == 0.0) || (1.0 - ((v_b * v_b) / (c * c)) < 0.0) then 0.0 else sqrt(1.0 - ((v_b * v_b) / (c * c))) - 1.0) <
+        (if (c * c == 0.0) || (1.0 - ((v * v) / (c * c)) < 0.0) then 0.0 else sqrt(1.0 - ((v * v) / (c * c))) - 1.0)
+    )
+
+
+lemma {:axiom} lemma_langmuir1_rules(p: real, p_b: real, q_max: real, K_a: real)
+    requires p >= 0.0 && p_b >= 0.0 && q_max > 0.0 && K_a > 0.0
+    // Constraints A & B: Positivity, Zero State, and Upper Bound
+    ensures (if (1.0 + K_a * p) == 0.0 then 0.0 else (q_max * K_a * p) / (1.0 + K_a * p)) >= 0.0
+    ensures (p == 0.0) ==> ((if (1.0 + K_a * p) == 0.0 then 0.0 else (q_max * K_a * p) / (1.0 + K_a * p)) == 0.0)
+    ensures (if (1.0 + K_a * p) == 0.0 then 0.0 else (q_max * K_a * p) / (1.0 + K_a * p)) < q_max
+    // Constraint C: Monotonicity
+    ensures (p_b > p) ==> (
+        (if (1.0 + K_a * p_b) == 0.0 then 0.0 else (q_max * K_a * p_b) / (1.0 + K_a * p_b)) >
+        (if (1.0 + K_a * p) == 0.0 then 0.0 else (q_max * K_a * p) / (1.0 + K_a * p))
+    )
+
+
+lemma {:axiom} lemma_langmuir2_rules(p: real, p_b: real, q_max1: real, K_a1: real, q_max2: real, K_a2: real)
+    requires p >= 0.0 && p_b >= 0.0 && q_max1 > 0.0 && K_a1 > 0.0 && q_max2 > 0.0 && K_a2 > 0.0
+    // Constraints A & B: Positivity, Zero State, and Upper Bound
+    ensures (if (1.0 + K_a1 * p == 0.0) || (1.0 + K_a2 * p == 0.0) then 0.0 else ((q_max1 * K_a1 * p) / (1.0 + K_a1 * p)) + ((q_max2 * K_a2 * p) / (1.0 + K_a2 * p))) >= 0.0
+    ensures (p == 0.0) ==> ((if (1.0 + K_a1 * p == 0.0) || (1.0 + K_a2 * p == 0.0) then 0.0 else ((q_max1 * K_a1 * p) / (1.0 + K_a1 * p)) + ((q_max2 * K_a2 * p) / (1.0 + K_a2 * p))) == 0.0)
+    ensures (if (1.0 + K_a1 * p == 0.0) || (1.0 + K_a2 * p == 0.0) then 0.0 else ((q_max1 * K_a1 * p) / (1.0 + K_a1 * p)) + ((q_max2 * K_a2 * p) / (1.0 + K_a2 * p))) < (q_max1 + q_max2)
+    // Constraint C: Monotonicity
+    ensures (p_b > p) ==> (
+        (if (1.0 + K_a1 * p_b == 0.0) || (1.0 + K_a2 * p_b == 0.0) then 0.0 else ((q_max1 * K_a1 * p_b) / (1.0 + K_a1 * p_b)) + ((q_max2 * K_a2 * p_b) / (1.0 + K_a2 * p_b))) >
+        (if (1.0 + K_a1 * p == 0.0) || (1.0 + K_a2 * p == 0.0) then 0.0 else ((q_max1 * K_a1 * p) / (1.0 + K_a1 * p)) + ((q_max2 * K_a2 * p) / (1.0 + K_a2 * p)))
+    )
 
 
 
