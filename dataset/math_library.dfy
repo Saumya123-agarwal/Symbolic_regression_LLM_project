@@ -394,36 +394,6 @@ lemma {:axiom} lemma_Polynomial_nguyen4_bounds(x: real)
     ensures (x < 0.0) ==> (powInt(x, 6) + powInt(x, 5) + powInt(x, 4) + powInt(x, 3) + powInt(x, 2) + x >= -0.75)
 
 
-lemma {:axiom} Res2Rules(r1: real, r2: real)
-    requires r1 > 0.0 && r2 > 0.0
-    ensures (r1 == r2) ==> ((r1 * r2) / (r1 + r2) == r1 / 2.0)
-    ensures (r1 * r2) / (r1 + r2) <= r1
-    ensures (r1 * r2) / (r1 + r2) <= r2
-
-
-lemma {:axiom} lemma_parallel_resistors_3(r1: real, r2: real, r3: real)
-    requires r1 > 0.0 && r2 > 0.0 && r3 > 0.0
-    ensures (r1 == r2 && r2 == r3) ==> ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3)) == r1 / 3.0)
-    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r1
-    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r2
-    ensures ((r1 * r2 * r3) / ((r1 * r2) + (r1 * r3) + (r2 * r3))) <= r3
-
-
-lemma {:axiom} lemma_gravity_monotonicity(m1: real, m1_b: real, m2: real, m2_b: real, r: real)
-    requires 0.0001 <= m1 <= 20.0 && 0.0001 <= m1_b <= 20.0
-    requires 0.0001 <= m2 <= 20.0 && 0.0001 <= m2_b <= 20.0
-    requires 0.0001 <= r <= 20.0
-    
-    // Inline guards permanently silence the division-by-zero warnings
-    ensures (m1_b > m1) ==> (
-        (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1_b * m2) / (r * r))) > 
-        (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1 * m2) / (r * r)))
-    )
-    ensures (m2_b > m2) ==> (
-        (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1 * m2_b) / (r * r))) > 
-        (if r * r == 0.0 then 0.0 else 6.67408e-11 * ((m1 * m2) / (r * r)))
-    )
-
 lemma {:axiom} lemma_kepler_rules(m1: real, m2: real, d: real, d_b: real, G: real)
     requires m1 > 0.0 && m2 > 0.0 && d > 0.0 && G > 0.0 && d_b > 0.0
     // Constraint A: Positivity
