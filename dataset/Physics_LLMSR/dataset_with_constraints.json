@@ -1,0 +1,1590 @@
+[
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO1_verification_strict",
+    "target_expression": "F0*sin(t) - beta*sin(v) - omega02*x^3 - omega02*x*exp(-abs(x))",
+    "constraints": {
+        "safeguards": [
+            "requires omega02 >= 0.0",
+            "requires beta >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x < 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO2_verification_strict",
+    "target_expression": "F0*sin(t) - omega02*x - omega02*x*exp(-abs(x))",
+    "constraints": {
+        "safeguards": [
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x < 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO3_verification_strict",
+    "target_expression": "-alpha*v^3 - mu*(1 - x^2)*v - omega02*x - omega02*x*exp(-abs(x))",
+    "constraints": {
+        "safeguards": [
+            "requires omega02 >= 0.0",
+            "requires alpha >= 0.0",
+            "requires mu >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (x == 0.0 && v > 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v < 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO4_verification_strict",
+    "target_expression": "F0*sin(t) - beta*sin(v) - 2.0*beta*v",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v > 0.0 && sin(v) >= 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v < 0.0 && sin(v) <= 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO5_verification_strict",
+    "target_expression": "F0*sin(t) - alpha*v^3 - omega02*(gamma*pow(abs(v), 0.33) + 1.0)*x - omega02*x",
+    "constraints": {
+        "safeguards": [
+            "requires alpha >= 0.0",
+            "requires omega02 >= 0.0",
+            "requires gamma >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v < 0.0) ==> (r >= 0.0)"
+        ]
+    }
+}, 
+
+
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO6",
+    "target_expression": "-beta*sin(v) - 2*beta*v - omega0^2*(gamma*|v|^0.33 + 1)*x - omega0^2*x^3 - omega0^2*x",
+    "lambda_expression": "lambda x, v, beta, gamma, omega0: -beta*sin(v) - 2*beta*v - (omega0**2)*(gamma*(abs(v)**0.33) + 1)*x - (omega0**2)*(x**3) - (omega0**2)*x",
+    "input_range": {
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= beta",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0) ==> (r <= 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= beta",
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= gamma",
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda x, v, beta, gamma, omega0, r: r <= beta",
+            "lambda x, v, beta, gamma, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)",
+            "lambda x, v, beta, gamma, omega0, r: (not (v == 0.0)) or (r <= 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO7",
+    "target_expression": "-beta*log(|v| + 1) - 2*beta*v - omega0^2*x^3",
+    "lambda_expression": "lambda x, v, beta, omega0: -beta*log(abs(v) + 1) - 2*beta*v - (omega0**2)*(x**3)",
+    "input_range": {
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= 0.0",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda x, v, beta, omega0, r: 0.0 <= x <= 1.0",
+            "lambda x, v, beta, omega0, r: 0.0 <= v <= 1.0",
+            "lambda x, v, beta, omega0, r: 0.0 <= beta",
+            "lambda x, v, beta, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda x, v, beta, omega0, r: r <= 0.0",
+            "lambda x, v, beta, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO8",
+    "target_expression": "-alpha*v^3 - beta*|v|^0.33 - omega0^2*x^3",
+    "lambda_expression": "lambda x, v, alpha, beta, omega0: -alpha*(v**3) - beta*(abs(v)**0.33) - (omega0**2)*(x**3)",
+    "input_range": {
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= alpha",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= 0.0",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda x, v, alpha, beta, omega0, r: 0.0 <= x <= 1.0",
+            "lambda x, v, alpha, beta, omega0, r: 0.0 <= v <= 1.0",
+            "lambda x, v, alpha, beta, omega0, r: 0.0 <= alpha",
+            "lambda x, v, alpha, beta, omega0, r: 0.0 <= beta",
+            "lambda x, v, alpha, beta, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda x, v, alpha, beta, omega0, r: r <= 0.0",
+            "lambda x, v, alpha, beta, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO9",
+    "target_expression": "-beta*|v|^0.33 - omega0^2*x^3",
+    "lambda_expression": "lambda x, v, beta, omega0: -beta*(abs(v)**0.33) - (omega0**2)*(x**3)",
+    "input_range": {
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= 0.0",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda x, v, beta, omega0, r: 0.0 <= x <= 1.0",
+            "lambda x, v, beta, omega0, r: 0.0 <= v <= 1.0",
+            "lambda x, v, beta, omega0, r: 0.0 <= beta",
+            "lambda x, v, beta, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda x, v, beta, omega0, r: r <= 0.0",
+            "lambda x, v, beta, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO10",
+    "target_expression": "F0*sin(t) - mu*(1 - x^2)*v - omega0^2*(gamma*|v|^0.33 + 1)*x - omega0^2*x",
+    "lambda_expression": "lambda t, x, v, F0, mu, gamma, omega0: F0*sin(t) - mu*(1 - x**2)*v - (omega0**2)*(gamma*(abs(v)**0.33) + 1)*x - (omega0**2)*x",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= mu",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= F0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= mu",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, mu, gamma, omega0, r: r <= F0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: (not (t == 0.0 and x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO11",
+    "target_expression": "F0*sin(t) - omega0^2*(gamma*t + 1)*x - omega0^2*x^3 - omega0^2*x",
+    "lambda_expression": "lambda t, x, F0, gamma, omega0: F0*sin(t) - (omega0**2)*(gamma*t + 1)*x - (omega0**2)*(x**3) - (omega0**2)*x",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, F0, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, F0, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, F0, gamma, omega0, r: 0.0 <= F0",
+            "lambda t, x, F0, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, F0, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, F0, gamma, omega0, r: r <= F0",
+            "lambda t, x, F0, gamma, omega0, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, F0, gamma, omega0, r: (not (t == 0.0 and x == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO12",
+    "target_expression": "-beta*sin(v) - omega0^2*(gamma*t + 1)*x - omega0^2*x^3",
+    "lambda_expression": "lambda t, x, v, beta, gamma, omega0: -beta*sin(v) - (omega0**2)*(gamma*t + 1)*x - (omega0**2)*(x**3)",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= beta",
+            "ensures (v == 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, beta, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, beta, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, beta, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, beta, gamma, omega0, r: 0.0 <= beta",
+            "lambda t, x, v, beta, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, v, beta, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, beta, gamma, omega0, r: r <= beta",
+            "lambda t, x, v, beta, gamma, omega0, r: (not (v == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, beta, gamma, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO13",
+    "target_expression": "F0*sin(t) - alpha*v^3 - beta*|v|^0.33 - omega0^2*(gamma*t + 1)*x - omega0^2*x",
+    "lambda_expression": "lambda t, x, v, F0, alpha, beta, gamma, omega0: F0*sin(t) - alpha*(v**3) - beta*(abs(v)**0.33) - (omega0**2)*(gamma*t + 1)*x - (omega0**2)*x",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= alpha",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= F0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= alpha",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= beta",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: r <= F0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: (not (t == 0.0 and x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO14",
+    "target_expression": "F0*sin(t) - mu*(1 - x^2)*v - omega0^2*(gamma*|v|^0.33 + 1)*x",
+    "lambda_expression": "lambda t, x, v, F0, mu, gamma, omega0: F0*sin(t) - mu*(1 - x**2)*v - (omega0**2)*(gamma*(abs(v)**0.33) + 1)*x",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= mu",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= F0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= mu",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, mu, gamma, omega0, r: r <= F0",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, F0, mu, gamma, omega0, r: (not (t == 0.0 and x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO15",
+    "target_expression": "F0*sin(t) - beta*log(|v| + 1) - beta*sin(v) - 2*beta*v - mu*(1 - x^2)*v",
+    "lambda_expression": "lambda t, x, v, F0, beta, mu: F0*sin(t) - beta*log(abs(v) + 1) - beta*sin(v) - 2*beta*v - mu*(1 - x**2)*v",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= mu"
+        ],
+        "outputspecs": [
+            "ensures r <= F0 + beta",
+            "ensures (v == 0.0) ==> (r <= F0)",
+            "ensures (t == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, beta, mu, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, beta, mu, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, beta, mu, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, beta, mu, r: 0.0 <= F0",
+            "lambda t, x, v, F0, beta, mu, r: 0.0 <= beta",
+            "lambda t, x, v, F0, beta, mu, r: 0.0 <= mu"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, beta, mu, r: r <= F0 + beta",
+            "lambda t, x, v, F0, beta, mu, r: (not (v == 0.0)) or (r <= F0)",
+            "lambda t, x, v, F0, beta, mu, r: (not (t == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO16_verification_strict",
+    "target_expression": "F0*sin(t) - omega02*(gamma*pow(abs(v), 0.33) + 1.0)*x - omega02*x - omega02*x*exp(-abs(x))",
+    "constraints": {
+        "safeguards": [
+            "requires omega02 >= 0.0",
+            "requires gamma >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (t == 0.0 && x == 0.0) ==> (r == 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO17_verification_strict",
+    "target_expression": "F0*sin(t) - beta*sin(x)*v - beta*sin(v) - omega02*x^3",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0",
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v > 0.0 && sin(v) >= 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v < 0.0 && sin(v) <= 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO18_verification_strict",
+    "target_expression": "F0*sin(t) - beta*sin(x)*v - 2.0*beta*v - omega02*x",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0",
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v < 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO19_verification_strict",
+    "target_expression": "-beta*sin(x)*v - omega02*x",
+    "constraints": {
+        "safeguards": [
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (x == 0.0) ==> (r == 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO20_verification_strict",
+    "target_expression": "-2.0*beta*v - omega02*x*exp(-abs(x))",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0",
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (x == 0.0 && v > 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v < 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO21_verification_strict",
+    "target_expression": "-alpha*v^3 - beta*log(abs(v)+1) - 2.0*beta*v - mu*(1-v^2)*v - omega02*(gamma*pow(abs(v), 0.33) + 1.0)*x",
+    "constraints": {
+        "safeguards": [
+            "requires alpha >= 0.0",
+            "requires beta >= 0.0",
+            "requires mu >= 0.0",
+            "requires omega02 >= 0.0",
+            "requires gamma >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (x == 0.0 && v > 0.0 && v <= 1.0) ==> (r <= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO22_verification_strict",
+    "target_expression": "F0*sin(t) - beta*sin(x)*v",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v > 0.0 && sin(x) >= 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v < 0.0 && sin(x) >= 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO23_verification_strict",
+    "target_expression": "-2.0*beta*v - beta*exp(-abs(x))*v - mu*(1-x^2)*v - omega02*x^3",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0",
+            "requires mu >= 0.0",
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (x == 0.0 && v > 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v < 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO24_verification_strict",
+    "target_expression": "F0*sin(t) - beta*log(abs(v)+1.0) - omega02*x*exp(-abs(x))",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0",
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v > 0.0) ==> (r <= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO25_verification_strict",
+    "target_expression": "F0*sin(t) - alpha*v^3 - beta*log(abs(v)+1.0)",
+    "constraints": {
+        "safeguards": [
+            "requires alpha >= 0.0",
+            "requires beta >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v > 0.0) ==> (r <= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO26",
+    "target_expression": "F0*sin(t) - beta*sin(v)",
+    "lambda_expression": "lambda t, v, F0, beta: F0*sin(t) - beta*sin(v)",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= beta"
+        ],
+        "outputspecs": [
+            "ensures r <= F0 + beta",
+            "ensures (v == 0.0) ==> (r <= F0)",
+            "ensures (t == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, v, F0, beta, r: 0.0 <= t <= 60.0",
+            "lambda t, v, F0, beta, r: 0.0 <= v <= 1.0",
+            "lambda t, v, F0, beta, r: 0.0 <= F0",
+            "lambda t, v, F0, beta, r: 0.0 <= beta"
+        ],
+        "outputspecs": [
+            "lambda t, v, F0, beta, r: r <= F0 + beta",
+            "lambda t, v, F0, beta, r: (not (v == 0.0)) or (r <= F0)",
+            "lambda t, v, F0, beta, r: (not (t == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO27",
+    "target_expression": "F0*sin(t) - beta*log(|v| + 1) - 2*beta*v - omega0^2*x^3",
+    "lambda_expression": "lambda t, x, v, F0, beta, omega0: F0*sin(t) - beta*log(abs(v) + 1) - 2*beta*v - (omega0**2)*(x**3)",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, beta, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, beta, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, beta, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, beta, omega0, r: 0.0 <= F0",
+            "lambda t, x, v, F0, beta, omega0, r: 0.0 <= beta",
+            "lambda t, x, v, F0, beta, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, beta, omega0, r: r <= F0",
+            "lambda t, x, v, F0, beta, omega0, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, F0, beta, omega0, r: (not (t == 0.0 and x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO28",
+    "target_expression": "F0*sin(t) - alpha*v^3 - 2*beta*v - beta*exp(-|v|)*v",
+    "lambda_expression": "lambda t, v, F0, alpha, beta: F0*sin(t) - alpha*(v**3) - 2*beta*v - beta*exp(-abs(v))*v",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= alpha",
+            "requires 0.0 <= beta"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, v, F0, alpha, beta, r: 0.0 <= t <= 60.0",
+            "lambda t, v, F0, alpha, beta, r: 0.0 <= v <= 1.0",
+            "lambda t, v, F0, alpha, beta, r: 0.0 <= F0",
+            "lambda t, v, F0, alpha, beta, r: 0.0 <= alpha",
+            "lambda t, v, F0, alpha, beta, r: 0.0 <= beta"
+        ],
+        "outputspecs": [
+            "lambda t, v, F0, alpha, beta, r: r <= F0",
+            "lambda t, v, F0, alpha, beta, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, v, F0, alpha, beta, r: (not (t == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO29",
+    "target_expression": "-2*beta*v - omega0^2*(gamma*|v|^0.33 + 1)*x - omega0^2*x^3 - omega0^2*x",
+    "lambda_expression": "lambda x, v, beta, gamma, omega0: -2*beta*v - (omega0**2)*(gamma*(abs(v)**0.33) + 1)*x - (omega0**2)*(x**3) - (omega0**2)*x",
+    "input_range": {
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= 0.0",
+            "ensures (v == 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= beta",
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= gamma",
+            "lambda x, v, beta, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda x, v, beta, gamma, omega0, r: r <= 0.0",
+            "lambda x, v, beta, gamma, omega0, r: (not (v == 0.0)) or (r <= 0.0)",
+            "lambda x, v, beta, gamma, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO30",
+    "target_expression": "-mu*(1 - x^2)*v - omega0^2*(gamma*t + 1)*x - omega0^2*x^3",
+    "lambda_expression": "lambda t, x, v, mu, gamma, omega0: -mu*(1 - x**2)*v - (omega0**2)*(gamma*t + 1)*x - (omega0**2)*(x**3)",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= mu",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= 0.0",
+            "ensures (v == 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, mu, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, mu, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, mu, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, mu, gamma, omega0, r: 0.0 <= mu",
+            "lambda t, x, v, mu, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, v, mu, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, mu, gamma, omega0, r: r <= 0.0",
+            "lambda t, x, v, mu, gamma, omega0, r: (not (v == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, mu, gamma, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO31_verification_strict",
+    "target_expression": "-alpha*v^3 - beta*sin(x)*v - beta*sin(v) - omega02*x^3",
+    "constraints": {
+        "safeguards": [
+            "requires alpha >= 0.0",
+            "requires beta >= 0.0",
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (x == 0.0 && v > 0.0 && sin(v) >= 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v < 0.0 && sin(v) <= 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO32_verification_strict",
+    "target_expression": "-omega02*(gamma*pow(abs(v), 0.33) + 1.0)*x - omega02*x^3",
+    "constraints": {
+        "safeguards": [
+            "requires omega02 >= 0.0",
+            "requires gamma >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (x == 0.0) ==> (r == 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO33_verification_strict",
+    "target_expression": "F0*sin(t) - alpha*v^3 - beta*exp(-abs(v))*v - omega02*x^3",
+    "constraints": {
+        "safeguards": [
+            "requires alpha >= 0.0",
+            "requires beta >= 0.0",
+            "requires omega02 >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v < 0.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO34_verification_strict",
+    "target_expression": "-2.0*beta*v - mu*(1.0-v^2)*v - omega02*(gamma*t + 1.0)*x - omega02*x",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0",
+            "requires mu >= 0.0",
+            "requires omega02 >= 0.0",
+            "requires gamma >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (t == 0.0 && v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v > 0.0 && v <= 1.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v < 0.0 && v >= -1.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "lsr_synth_physics",
+    "experiment_name": "PO35_verification_strict",
+    "target_expression": "-2.0*beta*v - mu*(1.0-v^2)*v - omega02*(gamma*pow(abs(v), 0.33) + 1.0)*x",
+    "constraints": {
+        "safeguards": [
+            "requires beta >= 0.0",
+            "requires mu >= 0.0",
+            "requires omega02 >= 0.0",
+            "requires gamma >= 0.0"
+        ],
+        "outputspecs": [
+            "ensures (v == 0.0 && x == 0.0) ==> (r == 0.0)",
+            "ensures (v == 0.0 && x > 0.0) ==> (r <= 0.0)",
+            "ensures (v == 0.0 && x < 0.0) ==> (r >= 0.0)",
+            "ensures (x == 0.0 && v > 0.0 && v <= 1.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v < 0.0 && v >= -1.0) ==> (r >= 0.0)"
+        ]
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO36",
+    "target_expression": "F0*sin(t) - beta*sin(v) - omega0^2*(gamma*|v|^0.33 + 1)*x",
+    "lambda_expression": "lambda t, x, v, F0, beta, gamma, omega0: F0*sin(t) - beta*sin(v) - (omega0**2)*(gamma*(abs(v)**0.33) + 1)*x",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0 + beta",
+            "ensures (v == 0.0) ==> (r <= F0)",
+            "ensures (t == 0.0 && x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= F0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= beta",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, beta, gamma, omega0, r: r <= F0 + beta",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: (not (v == 0.0)) or (r <= F0)",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: (not (t == 0.0 and x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO37",
+    "target_expression": "F0*sin(t) - beta*exp(-|x|)*v",
+    "lambda_expression": "lambda t, x, v, F0, beta: F0*sin(t) - beta*exp(-abs(x))*v",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= beta"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, beta, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, beta, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, beta, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, beta, r: 0.0 <= F0",
+            "lambda t, x, v, F0, beta, r: 0.0 <= beta"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, beta, r: r <= F0",
+            "lambda t, x, v, F0, beta, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, F0, beta, r: (not (t == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO38",
+    "target_expression": "F0*sin(t) - alpha*v^3 - 2*beta*v - omega0^2*(gamma*t + 1)*x",
+    "lambda_expression": "lambda t, x, v, F0, alpha, beta, gamma, omega0: F0*sin(t) - alpha*(v**3) - 2*beta*v - (omega0**2)*(gamma*t + 1)*x",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= alpha",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= F0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= alpha",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= beta",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: r <= F0",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, F0, alpha, beta, gamma, omega0, r: (not (t == 0.0 and x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO39",
+    "target_expression": "-beta*sin(v) - mu*(1 - x^2)*v - omega0^2*x*exp(-|x|)",
+    "lambda_expression": "lambda x, v, beta, mu, omega0: -beta*sin(v) - mu*(1 - x**2)*v - (omega0**2)*x*exp(-abs(x))",
+    "input_range": {
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= mu",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= beta",
+            "ensures (v == 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda x, v, beta, mu, omega0, r: 0.0 <= x <= 1.0",
+            "lambda x, v, beta, mu, omega0, r: 0.0 <= v <= 1.0",
+            "lambda x, v, beta, mu, omega0, r: 0.0 <= beta",
+            "lambda x, v, beta, mu, omega0, r: 0.0 <= mu",
+            "lambda x, v, beta, mu, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda x, v, beta, mu, omega0, r: r <= beta",
+            "lambda x, v, beta, mu, omega0, r: (not (v == 0.0)) or (r <= 0.0)",
+            "lambda x, v, beta, mu, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO40",
+    "target_expression": "F0*sin(t) - alpha*v^3 - beta*exp(-|x|)*v - mu*(1 - v^2)*v",
+    "lambda_expression": "lambda t, x, v, F0, alpha, beta, mu: F0*sin(t) - alpha*(v**3) - beta*exp(-abs(x))*v - mu*(1 - v**2)*v",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= alpha",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= mu"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, alpha, beta, mu, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, alpha, beta, mu, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, alpha, beta, mu, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, alpha, beta, mu, r: 0.0 <= F0",
+            "lambda t, x, v, F0, alpha, beta, mu, r: 0.0 <= alpha",
+            "lambda t, x, v, F0, alpha, beta, mu, r: 0.0 <= beta",
+            "lambda t, x, v, F0, alpha, beta, mu, r: 0.0 <= mu"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, alpha, beta, mu, r: r <= F0",
+            "lambda t, x, v, F0, alpha, beta, mu, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, F0, alpha, beta, mu, r: (not (t == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO41",
+    "target_expression": "F0*sin(t) - beta*|v|^0.33 - omega0^2*(gamma*|v|^0.33 + 1)*x - omega0^2*x^3 - omega0^2*x",
+    "lambda_expression": "lambda t, x, v, F0, beta, gamma, omega0: F0*sin(t) - beta*(abs(v)**0.33) - (omega0**2)*(gamma*(abs(v)**0.33) + 1)*x - (omega0**2)*(x**3) - (omega0**2)*x",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= gamma",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0",
+            "ensures (t == 0.0) ==> (r <= 0.0)",
+            "ensures (t == 0.0 && x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= F0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= beta",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= gamma",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, beta, gamma, omega0, r: r <= F0",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: (not (t == 0.0)) or (r <= 0.0)",
+            "lambda t, x, v, F0, beta, gamma, omega0, r: (not (t == 0.0 and x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO42",
+    "target_expression": "-mu*(1 - x^2)*v - omega0^2*x*exp(-|x|)",
+    "lambda_expression": "lambda x, v, mu, omega0: -mu*(1 - x**2)*v - (omega0**2)*x*exp(-abs(x))",
+    "input_range": {
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= mu",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= 0.0",
+            "ensures (v == 0.0) ==> (r <= 0.0)",
+            "ensures (x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda x, v, mu, omega0, r: 0.0 <= x <= 1.0",
+            "lambda x, v, mu, omega0, r: 0.0 <= v <= 1.0",
+            "lambda x, v, mu, omega0, r: 0.0 <= mu",
+            "lambda x, v, mu, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda x, v, mu, omega0, r: r <= 0.0",
+            "lambda x, v, mu, omega0, r: (not (v == 0.0)) or (r <= 0.0)",
+            "lambda x, v, mu, omega0, r: (not (x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO43",
+    "target_expression": "F0*sin(t) - alpha*v^3 - beta*sin(x)*v - 2*beta*v",
+    "lambda_expression": "lambda t, x, v, F0, alpha, beta: F0*sin(t) - alpha*(v**3) - beta*sin(x)*v - 2*beta*v",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= alpha",
+            "requires 0.0 <= beta"
+        ],
+        "outputspecs": [
+            "ensures r <= F0 + beta",
+            "ensures (v == 0.0) ==> (r <= F0)",
+            "ensures (t == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, alpha, beta, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, alpha, beta, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, alpha, beta, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, alpha, beta, r: 0.0 <= F0",
+            "lambda t, x, v, F0, alpha, beta, r: 0.0 <= alpha",
+            "lambda t, x, v, F0, alpha, beta, r: 0.0 <= beta"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, alpha, beta, r: r <= F0 + beta",
+            "lambda t, x, v, F0, alpha, beta, r: (not (v == 0.0)) or (r <= F0)",
+            "lambda t, x, v, F0, alpha, beta, r: (not (t == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+},
+
+{
+    "dataset_name": "llm_srbench_physics",
+    "experiment_name": "PO44",
+    "target_expression": "F0*sin(t) - beta*sin(x)*v - 2*beta*v - mu*(1 - x^2)*v - omega0^2*x*exp(-|x|)",
+    "lambda_expression": "lambda t, x, v, F0, beta, mu, omega0: F0*sin(t) - beta*sin(x)*v - 2*beta*v - mu*(1 - x**2)*v - (omega0**2)*x*exp(-abs(x))",
+    "input_range": {
+        "t": [
+            0.0,
+            60.0
+        ],
+        "x": [
+            0.0,
+            1.0
+        ],
+        "v": [
+            0.0,
+            1.0
+        ]
+    },
+    "constraints": {
+        "safeguards": [
+            "requires 0.0 <= t <= 60.0",
+            "requires 0.0 <= x <= 1.0",
+            "requires 0.0 <= v <= 1.0",
+            "requires 0.0 <= F0",
+            "requires 0.0 <= beta",
+            "requires 0.0 <= mu",
+            "requires 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "ensures r <= F0 + beta",
+            "ensures (v == 0.0) ==> (r <= F0)",
+            "ensures (t == 0.0 && x == 0.0 && v == 0.0) ==> (r == 0.0)"
+        ],
+        "costspecs": []
+    },
+    "constrains_lambda_str": {
+        "safeguards": [
+            "lambda t, x, v, F0, beta, mu, omega0, r: 0.0 <= t <= 60.0",
+            "lambda t, x, v, F0, beta, mu, omega0, r: 0.0 <= x <= 1.0",
+            "lambda t, x, v, F0, beta, mu, omega0, r: 0.0 <= v <= 1.0",
+            "lambda t, x, v, F0, beta, mu, omega0, r: 0.0 <= F0",
+            "lambda t, x, v, F0, beta, mu, omega0, r: 0.0 <= beta",
+            "lambda t, x, v, F0, beta, mu, omega0, r: 0.0 <= mu",
+            "lambda t, x, v, F0, beta, mu, omega0, r: 0.0 <= omega0"
+        ],
+        "outputspecs": [
+            "lambda t, x, v, F0, beta, mu, omega0, r: r <= F0 + beta",
+            "lambda t, x, v, F0, beta, mu, omega0, r: (not (v == 0.0)) or (r <= F0)",
+            "lambda t, x, v, F0, beta, mu, omega0, r: (not (t == 0.0 and x == 0.0 and v == 0.0)) or (r == 0.0)"
+        ],
+        "costspecs": []
+    }
+}
+
+]
