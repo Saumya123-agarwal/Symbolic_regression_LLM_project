@@ -511,7 +511,13 @@ lemma {:axiom} lemma_langmuir2_rules(p: real, p_b: real, q_max1: real, K_a1: rea
         (if (1.0 + K_a1 * p == 0.0) || (1.0 + K_a2 * p == 0.0) then 0.0 else ((q_max1 * K_a1 * p) / (1.0 + K_a1 * p)) + ((q_max2 * K_a2 * p) / (1.0 + K_a2 * p)))
     )
 
+lemma {:axiom} lemma_pow_zero_base(d: real)
+    requires d > 0.0
+    ensures pow(0.0, d) == 0.0
 
+
+lemma {:axiom} lemma_exp_zero()
+    ensures exp(0.0) == 1.0
 
 
 // =======STUB CODE ENDS==============
